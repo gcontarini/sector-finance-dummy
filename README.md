@@ -1,13 +1,21 @@
-# Sample Hardhat Project
+# Dummy project from sector finance
+## This is a playground to test out solutions
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
+# Create a .env first
+```
+DEPLOYER_KEY=<private key here>
+MANAGER_KEY=<private key here>
+INFURA_API_KEY=<api key here>
+DEPLOYER=<public wallet address>
+MANAGER=<public wallet address>
+FORK_CHAIN='avalanche', 'fantom', 'mainnet', 'moonbeam', 'moonriver', 'mainnet'
+```
 
-Try running some of the following tasks:
 
 ```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
+npm install
 npx hardhat node
-npx hardhat run scripts/deploy.ts
+npx hardhat run scripts/crossVault.ts
+npx hardhat run scripts/monitorEvent.ts
+npx hardhat run scripts/triggerEvent.ts
 ```
