@@ -1,6 +1,7 @@
 import { ethers } from "hardhat";
 import vaultAddr from "../vaultAddress.json";
 import registry from "../abi/Registry.json";
+import { setupAccount } from "../utils";
 
 async function logTx(abi: Array<any>, txData: any): Promise<void> {
     const iface = new ethers.utils.Interface(abi);
@@ -90,6 +91,10 @@ async function getBridgeStatus(transactionHash, fromChainId, toChainId) {
 async function main() {
   const vaultAddress = vaultAddr.eth;
 
+  // Get address to be the deployer
+  const [deployer] = await ethers.getSigners()
+  const owner = deployer.address
+
   const erc20Addresses = {
     testEth: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
     testAvax: '0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E',
@@ -142,6 +147,19 @@ async function main() {
     const VAULT = await ethers.getContractFactory("SectorVault");
     const vault = VAULT.attach(vaultAddress);
 
+    // const vaultSigner = await setupAccount(vault.address);
+
+    // logTx(registry, apiReturnData.result.txData);
+    // console.log(
+    //     "approvalTokenAddress",
+    //     apiReturnData.result.approvalData.approvalTokenAddress,
+    //     "allowanceTarget",
+    //     apiReturnData.result.approvalData.allowanceTarget,
+    //     "approvalAmount",
+    //     apiReturnData.result.approvalData.minimumApprovalAmount
+    // );
+    await vault.approveForManager(amount, owner);
+
     const tx = await vault.contractCallERC20(
       apiReturnData.result.txTarget,
       apiReturnData.result.txData,
@@ -163,18 +181,3 @@ main().catch((error) => {
   console.error(error);
   process.exitCode = 1;
 });
-
-/*
-
-// Main function
-async function main() {
-
-    // Uses web3 wallet in browser as provider
-    const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
-
-    // Prompt user for account connections
-    await provider.send("eth_requestAccounts", []);
-
-
-}
-*/
